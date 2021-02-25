@@ -1,2 +1,4 @@
-# deneme
-deneme123
+# Şifre projem
+Nasıl kullanılır
+degistir
+sifreleri goster
