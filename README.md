@@ -1,4 +1,4 @@
 # Şifre projem
-Nasıl kullanılır
-degistir
+Nasıl kullanılır,
+degistir,
 sifreleri goster
