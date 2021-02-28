@@ -1,1 +1,0 @@
-print('bir şey deniyom')
