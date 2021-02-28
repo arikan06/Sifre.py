@@ -105,4 +105,4 @@ while True:
     except AttributeError as e:
         print('delete tuşuna basman lazım kardeşim')
     except Exception as e:
-        print('Bu site ismi programda bulunamadı lütfen "ekle" komudunu kullanarak programa ekleyin. Programda kayıtlı olan programları görmek için "sifreler" yazın')
+        pass
