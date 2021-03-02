@@ -1,10 +1,5 @@
-# json dosyasında şifre olup olmadığını anlama, kaç tane giriş bilgisi kayıtlı söylemek, belirli giriş bilgilerini silmek, setup dosyasının sifre.py girisbilgiler.json yaratmasını falan sağlamak, json dosyasını yaratma,şifre değiştirme komudu eklenecek  hangi sitede olduğunu anlayacak kod eklenecek ingilizce olanı çıkarılacak keylogger kontrol yani şifrelerin çalınmasını engellemek için, uninstall eklemek json dosyasının olduğu yeri bulmak, şifreleri daha güzel gösterecek şekilde {} yerine |- gibi try eklicem
-try:
-    import json
-except Exception as e:
-    print('Json modülünde bir sorun çıktı')
-    print('----------------------------------------------')
-    print('hata kodu: ',e)
+# kaç tane giriş bilgisi kayıtlı söylemek, belirli giriş bilgilerini silmek, setup dosyasının sifre.py girisbilgiler.json yaratmasını falan sağlamak, json dosyasını yaratma,şifre değiştirme komudu eklenecek  hangi sitede olduğunu anlayacak kod eklenecek ingilizce olanı çıkarılacak keylogger kontrol yani şifrelerin çalınmasını engellemek için, uninstall eklemek json dosyasının olduğu yeri bulmak, şifreleri daha güzel gösterecek şekilde {} yerine |- gibi try eklicem
+import json
 try:
     from pynput import keyboard
     import pyperclip #pyperclip'i kütüphaneye ekle
@@ -14,38 +9,54 @@ except ModuleNotFoundError:
     import pip3
     pip.main(['install','pynput', 'pyperclip']) #Asıl komut
     input('')
+    pass
 try:
     def yazdirJson(data, filename='girisBilgileri.json'):
         with open(filename,'w') as f:
             json.dump(data, f, indent=1)
-    with open('girisBilgileri.json') as jsonDosyasi:
-        data = json.load(jsonDosyasi)
+            temp = data['Giris bilgileri']
+            data = json.load(f)
+    with open('girisBilgileri.json') as f:
+        data = json.load(f)
         temp = data['Giris bilgileri']
-    girisBilgileri = json.load(open('girisBilgileri.json'))
 except FileNotFoundError:
-    print('girisBilgileri.json bulunamadı')
+    print('girisBilgileri.json bulunamadı, girisBilgileri.json yaratılıyor..')
+    with open('girisBilgileri.json','w') as f:
+        girisBilgileriSifirla = {
+         "Giris bilgileri": [
+
+        ]}
+        json.dump(girisBilgileriSifirla, f, indent=1)
+        print("girisBilgileri.json yaratıldı")
+        print('----------------------------------------------')
+        pass
+except Exception as e:
+    print(e)
     input('')
 print('Şifreleri görmek için "sifreler",')
 print('Giriş bilgilerini değiştirmek için "degistir",')
 print('Şifre eklemek için "ekle",')
 print('Şifreleri sıfırlamak için "sifirla",')
+print('Belirli giriş bilgilerini simek için "sil",')
 print('Önceden kaydedilen giriş bilgilerini kopyalamak için site adını girin')
 while True:
+    girisBilgileri = json.load(open('girisBilgileri.json'))
     try:
         print('----------------------------------------------')
         cevap=input('') #Cevap nedir
         if cevap=='sifirla':
-            print('Şifre sıfırlanmıştir')
-            cevap=input('')
+            with open('girisBilgileri.json','w') as f:
+                girisBilgileriSifirla = {
+                 "Giris bilgileri": [
+
+                ]}
+                json.dump(girisBilgileriSifirla, f, indent=1)
+                print("girisBilgileri.json sıfırlandı")
         if cevap=='ekle':
-            print('Hangi sitenin giriş bilgisini kaydetmek istersiniz')
-            siteEkle=input('')
-            print('e-posta giriniz')
-            epostaEkle=input('')
-            print('kullanıcı adı giriniz')
-            kullaniciAdiEkle=input('')
-            print('sifre giriniz')
-            sifreEkle=input('')
+            siteEkle=input('Hangi sitenin giriş bilgisini kaydetmek istersiniz? ')
+            epostaEkle=input('E-posta giriniz? ')
+            kullaniciAdiEkle=input('Kullanıcı adı giriniz? ')
+            sifreEkle=input('Şifre giriniz? ')
             print('Site:',siteEkle, 'e-posta:',epostaEkle, 'Sifre:',sifreEkle, 'eklemek istediğinize emin misiniz?(e/h)')
             cevap=input('')
             if cevap=='e':
@@ -57,8 +68,8 @@ while True:
                 }]}
                 temp.append(girisBilgileriEkle)
                 yazdirJson(data)
-                cevap=input('')
         if cevap=='degistir':
+            girisBilgileri = json.load(open('girisBilgileri.json'))
             girisBilgileriPrint = json.dumps(girisBilgileri, indent=1)
             print(girisBilgileriPrint)
             print('----------------------------------------------')
@@ -87,9 +98,9 @@ while True:
                     print('İptal edildi.')
                     cevap=input('')
         if cevap=='sifreler':
+            girisBilgileri = json.load(open('girisBilgileri.json'))
             girisBilgileriPrint = json.dumps(girisBilgileri, indent=1)
             print(girisBilgileriPrint)
-            cevap=input('')
     except Exception as e:
         print(e,'programda bulunmamaktadır.')
     try:
@@ -105,4 +116,4 @@ while True:
     except AttributeError as e:
         print('delete tuşuna basman lazım kardeşim')
     except Exception as e:
-        print('Bu site ismi programda bulunamadı lütfen "ekle" komudunu kullanarak programa ekleyin. Programda kayıtlı olan programları görmek için "sifreler" yazın')
+        pass
