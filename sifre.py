@@ -12,13 +12,9 @@ except ModuleNotFoundError:
     pass
 try:
     def yazdirJson(data, filename='girisBilgileri.json'):
-        with open(filename,'w') as f:
+        with open('girisBilgileri.json','w') as f:
             json.dump(data, f, indent=1)
-            temp = data['Giris bilgileri']
             data = json.load(f)
-    with open('girisBilgileri.json') as f:
-        data = json.load(f)
-        temp = data['Giris bilgileri']
 except FileNotFoundError:
     print('girisBilgileri.json bulunamadı, girisBilgileri.json yaratılıyor..')
     with open('girisBilgileri.json','w') as f:
@@ -66,8 +62,7 @@ while True:
                 "kullanici adi":kullaniciAdiEkle,
                 "sifre": sifreEkle
                 }]}
-                temp.append(girisBilgileriEkle)
-                yazdirJson(data)
+                yazdirJson(girisBilgileriEkle)
         if cevap=='degistir':
             girisBilgileri = json.load(open('girisBilgileri.json'))
             girisBilgileriPrint = json.dumps(girisBilgileri, indent=1)
