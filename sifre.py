@@ -6,7 +6,7 @@ try:
 except ModuleNotFoundError:
     print('pyperclip ve pynput modülü bulunamadı.')
     print('pyperclip ve pynput modülü kütüphaneye ekleniyor...')
-    import pip3
+    import pip
     pip.main(['install','pynput', 'pyperclip']) #Asıl komut
     input('')
     pass
