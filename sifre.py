@@ -11,10 +11,7 @@ except ModuleNotFoundError:
     input('')
     pass
 try:
-    def yazdirJson(data, filename='girisBilgileri.json'):
-        with open('girisBilgileri.json','w') as f:
-            json.dump(data, f, indent=1)
-            data = json.load(f)
+    girisBilgileri = json.load(open('girisBilgileri.json'))
 except FileNotFoundError:
     print('girisBilgileri.json bulunamadı, girisBilgileri.json yaratılıyor..')
     with open('girisBilgileri.json','w') as f:
@@ -29,6 +26,10 @@ except FileNotFoundError:
 except Exception as e:
     print(e)
     input('')
+finally:
+    girisBilgileri = json.load(open('girisBilgileri.json'))
+    ekle = girisBilgileri['Giris bilgileri']
+
 print('Şifreleri görmek için "sifreler",')
 print('Giriş bilgilerini değiştirmek için "degistir",')
 print('Şifre eklemek için "ekle",')
@@ -36,7 +37,6 @@ print('Şifreleri sıfırlamak için "sifirla",')
 print('Belirli giriş bilgilerini simek için "sil",')
 print('Önceden kaydedilen giriş bilgilerini kopyalamak için site adını girin')
 while True:
-    girisBilgileri = json.load(open('girisBilgileri.json'))
     try:
         print('----------------------------------------------')
         cevap=input('') #Cevap nedir
@@ -48,6 +48,7 @@ while True:
                 ]}
                 json.dump(girisBilgileriSifirla, f, indent=1)
                 print("girisBilgileri.json sıfırlandı")
+
         if cevap=='ekle':
             siteEkle=input('Hangi sitenin giriş bilgisini kaydetmek istersiniz? ')
             epostaEkle=input('E-posta giriniz? ')
@@ -62,11 +63,12 @@ while True:
                 "kullanici adi":kullaniciAdiEkle,
                 "sifre": sifreEkle
                 }]}
-                yazdirJson(girisBilgileriEkle)
+                ekle.append(girisBilgileriEkle)
+                print('Başarı. "Sifreler" yazarak kayıtlı şifreleri görebilirsiniz.')
+
         if cevap=='degistir':
-            girisBilgileri = json.load(open('girisBilgileri.json'))
-            girisBilgileriPrint = json.dumps(girisBilgileri, indent=1)
-            print(girisBilgileriPrint)
+            #girisBilgileriPrint = json.dumps(girisBilgileri, indent=1)
+            #print(girisBilgileriPrint)
             print('----------------------------------------------')
             print('Hangi sitenin bilgilerini değiştirmek istersiniz?')
             siteDegistir=input('')
@@ -92,19 +94,20 @@ while True:
                 if cevap=='h':
                     print('İptal edildi.')
                     cevap=input('')
+
         if cevap=='sifreler':
-            girisBilgileri = json.load(open('girisBilgileri.json'))
             girisBilgileriPrint = json.dumps(girisBilgileri, indent=1)
             print(girisBilgileriPrint)
+
     except Exception as e:
         print(e,'programda bulunmamaktadır.')
     try:
-        pyperclip.copy(girisBilgileri['Giris bilgileri'][0][cevap][0]['kullanici adi']) #Kullanıcı ismi kopyalamak
-        print('Kullanıcı adı başarıyla kopyalandı') #Kullanıcı ismi kopyalandığını bildirmek
+        pyperclip.copy(girisBilgileri['Giris bilgileri'][0][cevap][0]['kullanici adi'])
+        print('Kullanıcı adı başarıyla kopyalandı')
         def on_release(key):
             if key == key.delete:
-                pyperclip.copy(girisBilgileri['Giris bilgileri'][0][cevap][0]['sifre']) #Şifre kopyalamak
-                print('Şifre başarıyla kopyalandı') #Şifre kopyalandığını bildirmek
+                pyperclip.copy(girisBilgileri['Giris bilgileri'][0][cevap][0]['sifre'])
+                print('Şifre başarıyla kopyalandı')
                 return False
         with keyboard.Listener(on_release=on_release) as listener:
             listener.join()
