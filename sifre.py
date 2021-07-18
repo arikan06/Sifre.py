@@ -3,8 +3,8 @@ import json
 import random
 import time
 try:
-    from pynput.keyboard import Key, Controller
-    keyboard = Controller()
+    from pynput.keyboard import Key, Controller, Listener
+    klavye = Controller()
     import pyperclip #pyperclip'i kütüphaneye ekle
 except ModuleNotFoundError:
     print('pyperclip ve pynput modülü bulunamadı.')
@@ -32,6 +32,10 @@ except Exception as e:
 finally:
     girisBilgileri = json.load(open('girisBilgileri.json'))
     ekle = girisBilgileri['Giris bilgileri']
+    def yazdirJson(yazdirilacak):
+        ekle.append(yazdirilacak)
+        #with open("girisBilgileri.json", "w") as f:
+        #    json.dump(yazdirilacak, ekle, indent=1)
 
 def ingilizce(ingilizcelestir):
     ingilizcelestir = ingilizcelestir.replace("İ", "i")
@@ -79,25 +83,36 @@ while True:
                     "kullanici adi":kullaniciAdiEkle,
                     "sifre": sifreEkle
                     }]}
-                    ekle.append(girisBilgileriEkle)
+                    #ekle.append(girisBilgileriEkle)
+                    yazdirJson(girisBilgileriEkle)
                     print('Başarı. "Sifreler" yazarak kayıtlı şifreleri görebilirsiniz.')
 
             if cevap=='sifreler':
                 girisBilgileriPrint = json.dumps(girisBilgileri, indent=1)
                 print(girisBilgileriPrint)
         else:
-            #print('1')
-            #pyperclip.copy(girisBilgileri['Giris bilgileri'][0][cevap][0]['kullanici adi'])
-            #print('1')
-            #keyboard.press(Key.alt_l)
-            #keyboard.release(Key.alt_l)
-            #keyboard.press(Key.tab)
-            #keyboard.release(Key.tab)
-            time.sleep(2)
-            kullaniciAdi=str(girisBilgileri['Giris bilgileri'][0][cevap][0]['kullanici adi'])
-            keyboard.type(kullaniciAdi)
-            #keyboard.type(girisBilgileri['Giris bilgileri'][0][cevap][0]['sifre'])
-            #keyboard.press(Key.enter)
+            #print('Siteye gidip kullanıcı adı girme kutusunun üstüne tıkladıktan sonra shift tuşuna basın.')
+            def tusBasildi(tus):
+                if tus == Key.delete:
+                    return False
+                if tus == Key.shift:
+                    for harf in girisBilgileri['Giris bilgileri'][0][cevap][0]['kullanici adi']:
+                        time.sleep(0.03)
+                        klavye.type(harf)
+
+                    klavye.press(Key.tab)
+                    klavye.release(Key.tab)
+
+                    for harf in girisBilgileri['Giris bilgileri'][0][cevap][0]['sifre']:
+                        time.sleep(0.03)
+                        klavye.type(harf)
+
+                    time.sleep(0.03)
+
+                    klavye.press(Key.enter)
+                    return False
+            with Listener(on_release=tusBasildi) as dinleyici:
+                dinleyici.join()
     except Exception as e:
         print(e)
         me=input('')
